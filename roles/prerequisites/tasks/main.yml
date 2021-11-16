@@ -1,0 +1,74 @@
+- name : "Install dependancies"
+  become: yes
+  become_user: root
+  apt:
+    pkg: ['postgresql-13-postgis-3', 'postgis', 'postgresql-contrib', 'supervisor', 'curl', 'git']
+    update_cache: yes
+    state: present
+  when: ansible_distribution_release == "bullseye"
+- name : "Install python3 dependencies"
+  become: yes
+  become_user: root
+  apt: 
+    pkg: ['python3', 'python3-dev', 'python3-setuptools', 'python3-pip', 'python3-virtualenv', 'python3-venv', 'libpq-dev', 'python3-psycopg2']
+    state: present
+    update_cache: yes
+  when: ansible_distribution_release == "bullseye"
+- name: check if nodejs is already installed
+  package_facts:
+    manager: auto
+- name: get nodejs src
+  become: true
+  become_user: synthese
+  shell: "cd /home/{{ user }} && curl -fsSL https://deb.nodesource.com/setup_{{ nodejs }}.x | bash -"
+  when: "'nodejs' not in ansible_facts.packages"
+- name : install nodejs
+  become: yes
+  become_user: root
+  apt:
+    pkg: nodejs
+    state: present
+    update_cache: yes
+  when: "'nodejs' not in ansible_facts.packages"
+- name: Install nvm
+  shell: >
+    curl https://raw.githubusercontent.com/creationix/nvm/{{ nvm }}/install.sh | sh
+    creates=/home/{{ user }}/.nvm/nvm.sh
+- name: install apache2
+  become: yes
+  become_user: root
+  apt:
+    pkg: apache2
+    state: present
+- name: install virtualenv from pip
+  become: yes
+  become_user: root
+  pip:
+    name: virtualenv==20.0.1
+- name: add new user to debian
+  become: yes
+  become_user: root
+  user:
+    name: "{{ user }}"
+    password: "{{ password }}"
+    createhome: yes
+    home: "/home/{{ user }}"
+    groups:
+      - sudo
+    shell: /bin/bash
+    update_password: on_create
+    state: present
+- name : check if git project exists
+  stat: 
+    path: "/home/synthese/usershub"
+  register: usershub_folder
+- name: clone git project
+  become: yes
+  become_user: "{{ user }}"
+  when: not usershub_folder.stat.exists
+  git:
+    repo: '{{gitrepo}}'
+    dest: '{{gitfolder}}'
+    version: 2.2.1
+    recursive: yes
+    track_submodules: yes

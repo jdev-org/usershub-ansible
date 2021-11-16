@@ -1,0 +1,7 @@
+- name: create role geonature
+  become_user: postgres
+  become: yes
+  postgresql_user:
+    name: "{{ db.role }}"
+    password: "{{ db.password }}"
+    encrypted: yes

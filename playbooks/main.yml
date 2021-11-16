@@ -1,0 +1,11 @@
+- name: Install usershub standalone
+  hosts: myusershub
+  roles:
+    - role: '../roles/prerequisites'
+    - role: '../roles/postgresql'
+    - role: '../roles/application'
+  vars:
+    db: {
+      role: geonature,
+      password: geonature
+    }

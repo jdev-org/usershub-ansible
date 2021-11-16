@@ -1,0 +1,6 @@
+gitrepo: https://github.com/PnX-SI/UsersHub.git
+gitfolder: /home/synthese/usershub
+user: synthese
+password: synthese
+nodejs: 14
+nvm: v0.33.6
