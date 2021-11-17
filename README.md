@@ -41,5 +41,5 @@ ansible-playbook playbooks/main.yml
 👉 If you don't run the playbook with a remote access (ssh) you maybe need to replace the ansible/hosts file content by :
 
 ```
-myusershub ansible_ssh_host=192.168.1.158
+myusershub
 ```

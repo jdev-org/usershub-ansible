@@ -1,12 +1,12 @@
 # Database settings
-SQLALCHEMY_DATABASE_URI = "postgresql://monuser:monpassachanger@localhost/usershubdb"
+SQLALCHEMY_DATABASE_URI = "postgresql://{{ application.db.user }}:{{ application.db.upassword }}@{{ application.db.host }}/{{ application.db.name }}"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-URL_APPLICATION = 'http://localhost:5001'
+URL_APPLICATION = 'http://{{ application.config.target }}:5001'
 
 # Liste d'URL depuis lesquels on accepte des requetes croisées
-URLS_COR = ['http://localhost:5000']
+URLS_COR = ['http://{{ application.config.target }}:{{ application.config.serverport }}']
 
-SECRET_KEY = 'super secret key'
+SECRET_KEY = "{{ application.config.secret }}"
 
 # Authentification crypting method (hash or md5)
 PASS_METHOD = 'hash'
@@ -19,7 +19,7 @@ COOKIE_EXPIRATION = 3600
 COOKIE_AUTORENEW = True
 
 # SERVER
-PORT = 5001
+PORT = {{ application.config.serverport }}
 DEBUG = False
 
 ACTIVATE_API = True

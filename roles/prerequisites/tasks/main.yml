@@ -6,6 +6,7 @@
     update_cache: yes
     state: present
   when: ansible_distribution_release == "bullseye"
+
 - name : "Install python3 dependencies"
   become: yes
   become_user: root
@@ -14,14 +15,17 @@
     state: present
     update_cache: yes
   when: ansible_distribution_release == "bullseye"
+
 - name: check if nodejs is already installed
   package_facts:
     manager: auto
+
 - name: get nodejs src
   become: true
-  become_user: synthese
-  shell: "cd /home/{{ user }} && curl -fsSL https://deb.nodesource.com/setup_{{ nodejs }}.x | bash -"
+  become_user: "{{ user.name }}"
+  shell: "cd /home/{{ user.name }} && curl -fsSL https://deb.nodesource.com/setup_{{ prerequisite.node.nodejs }}.x | bash -"
   when: "'nodejs' not in ansible_facts.packages"
+
 - name : install nodejs
   become: yes
   become_user: root
@@ -30,45 +34,35 @@
     state: present
     update_cache: yes
   when: "'nodejs' not in ansible_facts.packages"
+
 - name: Install nvm
   shell: >
-    curl https://raw.githubusercontent.com/creationix/nvm/{{ nvm }}/install.sh | sh
-    creates=/home/{{ user }}/.nvm/nvm.sh
+    curl https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | sh
+    creates=/home/synthese/.nvm/nvm.sh
+
 - name: install apache2
   become: yes
   become_user: root
   apt:
     pkg: apache2
     state: present
+
 - name: install virtualenv from pip
   become: yes
   become_user: root
   pip:
     name: virtualenv==20.0.1
-- name: add new user to debian
-  become: yes
-  become_user: root
-  user:
-    name: "{{ user }}"
-    password: "{{ password }}"
-    createhome: yes
-    home: "/home/{{ user }}"
-    groups:
-      - sudo
-    shell: /bin/bash
-    update_password: on_create
-    state: present
+
 - name : check if git project exists
   stat: 
-    path: "/home/synthese/usershub"
+    path: "/home/ {{ prerequisite.user.name }} /usershub"
   register: usershub_folder
+
 - name: clone git project
-  become: yes
-  become_user: "{{ user }}"
   when: not usershub_folder.stat.exists
   git:
-    repo: '{{gitrepo}}'
-    dest: '{{gitfolder}}'
-    version: 2.2.1
+    repo: "{{ prerequisite.git.url }}"
+    dest: "~/usershub"
+    version: "{{ prerequisite.git.release }}"
     recursive: yes
     track_submodules: yes

@@ -1,11 +1,45 @@
 - name: Install usershub standalone
   hosts: myusershub
   roles:
-    - role: '../roles/prerequisites'
-    - role: '../roles/postgresql'
+    # - role: '../roles/prerequisites'
+    # - role: '../roles/postgresql'
     - role: '../roles/application'
   vars:
-    db: {
-      role: geonature,
-      password: geonature
+    prerequisite: {
+      user: {
+        name: synthese,
+        password: synthese
+      },
+      git: {
+        url: https://github.com/PnX-SI/UsersHub.git,
+        release: 2.2.1
+      },
+      node: {
+        nodejs: 14,
+        nvm: v0.33.6
+      }
+    }
+    application: {
+      mode: prod,
+      authmodule: 1.5.3,
+      db: {
+        role: geonature,
+        password: geonature,
+        user: geonatuser,
+        upassword: geonatuser,
+        name: usershubdb,
+        port: 5432,
+        host: localhost
+      },
+      config: {
+        secret: secret,
+        serverport: 5001,
+        target: localhost,
+        fqdn: usershub
+      },
+      settings: {
+        dropdb: true,
+        minimal: true,
+        sample: true
+      }
     }

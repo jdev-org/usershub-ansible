@@ -6,28 +6,28 @@
 mode=prod
 
 # Effacer la base de donnée existante lors de la réinstallation
-drop_apps_db=false
+drop_apps_db={{ application.settings.dropdb }}
 # Host de la base de données de l'application
-db_host=localhost
+db_host={{ application.db.host }}
 # Port du serveur PostgreSQL
-pg_port=5432
+pg_port={{ application.db.port }}
 # Nom de la base de données de l'application
-db_name=usershubdb
+db_name={{ application.db.name }}
 # Nom de l'utilisateur propriétaire de la BDD de l'application
-user_pg=geonatuser
+user_pg={{ application.db.user }}
 # User propriétaire de la BDD de l'application
-user_pg_pass=monpassachanger
+user_pg_pass={{ application.db.upassword }}
 # Intégrer les données minimales (Applications et tags)
-insert_minimal_data=true
+insert_minimal_data={{application.settings.minimal}}
 # Intégrer les données exemple (Role, groupe, organismes et correspondances)
-insert_sample_data=true
+insert_sample_data={{application.settings.sample}}
 
 ############################
 ### Application settings ###
 ############################
 
 # URL de l'application
-url_application=http://mon_url.fr
+url_application=http://{{ application.config.fqdn }}.fr
 
 
 #######################
@@ -45,4 +45,4 @@ app_name=usershub2
 venv_dir=venv
 gun_num_workers=4
 gun_host=0.0.0.0
-gun_port=5001
+gun_port={{ application.config.serverport }}

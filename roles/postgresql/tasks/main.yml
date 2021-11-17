@@ -2,6 +2,6 @@
   become_user: postgres
   become: yes
   postgresql_user:
-    name: "{{ db.role }}"
-    password: "{{ db.password }}"
+    name: "{{ application.db.role }}"
+    password: "{{ application.db.password }}"
     encrypted: yes
