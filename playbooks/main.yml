@@ -20,9 +20,7 @@
         nvm: v0.33.6
       }
     }
-    application: {
-      mode: prod,
-      authmodule: 1.5.3,
+    postgresql: {
       db: {
         role: geonature,
         password: geonature,
@@ -32,6 +30,11 @@
         port: 5432,
         host: localhost
       },
+      dropdb: true
+    }
+    application: {
+      mode: prod,
+      authmodule: 1.5.3,
       config: {
         secret: secret,
         serverport: 5001,
@@ -39,7 +42,6 @@
         fqdn: usershub
       },
       settings: {
-        dropdb: true,
         minimal: true,
         sample: true
       }

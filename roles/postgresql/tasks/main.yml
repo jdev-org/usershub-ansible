@@ -2,6 +2,36 @@
   become_user: postgres
   become: yes
   postgresql_user:
-    name: "{{ application.db.role }}"
-    password: "{{ application.db.password }}"
+    name: "{{ postgresql.db.role }}"
+    password: "{{ postgresql.db.password }}"
     encrypted: yes
+    state: present
+
+- name: "Create app database - forced"
+  postgresql_db:
+    state: absent
+    name: "{{ item }}"
+  become: yes
+  become_user: postgres
+  with_items:
+  - "{{ postgresql.db.name }}"
+  when: "{{ postgresql.dropdb }}"
+
+- name: "Create app database - if necessary"
+  postgresql_db:
+    state: present
+    name: "{{ item }}"
+  become: yes
+  become_user: postgres
+  with_items:
+  - "{{ postgresql.db.name }}"
+  when: "not {{ postgresql.dropdb }}"
+
+- name: Create extensions
+  postgresql_ext:
+    name: "{{ item }}"
+    db: "{{ postgresql.db.name }}"
+  with_items:
+  - "uuid-ossp"
+
+# TODO : FLASK VENV

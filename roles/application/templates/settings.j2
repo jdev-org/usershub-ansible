@@ -6,17 +6,17 @@
 mode=prod
 
 # Effacer la base de donnée existante lors de la réinstallation
-drop_apps_db={{ application.settings.dropdb }}
+drop_apps_db={{ postgresql.dropdb }}
 # Host de la base de données de l'application
-db_host={{ application.db.host }}
+db_host={{ postgresql.db.host }}
 # Port du serveur PostgreSQL
-pg_port={{ application.db.port }}
+pg_port={{ postgresql.db.port }}
 # Nom de la base de données de l'application
-db_name={{ application.db.name }}
+db_name={{ postgresql.db.name }}
 # Nom de l'utilisateur propriétaire de la BDD de l'application
-user_pg={{ application.db.user }}
+user_pg={{ postgresql.db.user }}
 # User propriétaire de la BDD de l'application
-user_pg_pass={{ application.db.upassword }}
+user_pg_pass={{ postgresql.db.upassword }}
 # Intégrer les données minimales (Applications et tags)
 insert_minimal_data={{application.settings.minimal}}
 # Intégrer les données exemple (Role, groupe, organismes et correspondances)

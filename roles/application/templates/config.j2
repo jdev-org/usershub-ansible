@@ -1,5 +1,5 @@
 # Database settings
-SQLALCHEMY_DATABASE_URI = "postgresql://{{ application.db.user }}:{{ application.db.upassword }}@{{ application.db.host }}/{{ application.db.name }}"
+SQLALCHEMY_DATABASE_URI = "postgresql://{{ postgresql.db.user }}:{{ postgresql.db.upassword }}@{{ postgresql.db.host }}/{{ postgresql.db.name }}"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 URL_APPLICATION = 'http://{{ application.config.target }}:5001'
 
