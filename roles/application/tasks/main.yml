@@ -9,29 +9,9 @@
     src: "settings.j2"
     dest: "~/usershub/config/settings.ini"
 
-## INSTALL PYTHON VENV
-- name: create virutal env
-  shell: "python3 -m venv ~/usershub/venv"
-
-- name: Install common venv requirements
-  pip:
-    requirements: "~/usershub/requirements-common.txt"
-    virtualenv: '~/usershub/venv'
-
-- name: Install dev auth module
-  when: application.mode == "dev"
-  pip:
-    name: "~/usershub/dependencies/UsersHub-authentification-module"
-    virtualenv: '~/usershub/venv'
-
-- name: get dev auth module
-  when: application.mode == "prod"
-  get_url:
-    url: https://github.com/PnX-SI/UsersHub-authentification-module/archive/{{ application.authmodule }}.zip
-    dest: ~/usershub/{{ application.authmodule }}.zip
-    
-- name: Install prod auth module
-  when: application.mode == "prod"
-  pip:
-    name: ~/usershub/{{ application.authmodule }}.zip
-    virtualenv: '~/usershub/venv'
+- include: "{{item}}.yml"
+  with_items:
+  - venv
+  - nodejs
+  - daemon
+  - apache

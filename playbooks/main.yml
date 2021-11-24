@@ -1,21 +1,22 @@
 - name: Install usershub standalone
   hosts: myusershub
   roles:
-    # - role: '../roles/prerequisites'
-    # - role: '../roles/postgresql'
+    - role: '../roles/prerequisites'
+    - role: '../roles/postgresql'
     - role: '../roles/application'
   vars:
     prerequisite: {
       user: {
         name: synthese,
-        password: synthese
+        password: synthese,
+        directory: /home/user/synthese
       },
       git: {
         url: https://github.com/PnX-SI/UsersHub.git,
         release: 2.2.1
       },
       node: {
-        nodejs: 14,
+        nodejs: 10,
         nvm: v0.33.6
       }
     }

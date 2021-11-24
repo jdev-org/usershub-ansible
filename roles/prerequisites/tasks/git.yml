@@ -1,0 +1,13 @@
+- name : check if git project exists
+  stat: 
+    path: "/home/ {{ prerequisite.user.name }} /usershub"
+  register: usershub_folder
+
+- name: clone git project
+  when: not usershub_folder.stat.exists
+  git:
+    repo: "{{ prerequisite.git.url }}"
+    dest: "~/usershub"
+    version: "{{ prerequisite.git.release }}"
+    recursive: yes
+    track_submodules: yes

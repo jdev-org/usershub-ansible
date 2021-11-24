@@ -1,0 +1,23 @@
+- name : check if systemctl already exists
+  stat: 
+    path: "/etc/systemd/system/usershub.service"
+  register: usershub_service
+
+- name: Create service systemctl file
+  become: true
+  become_user: root
+  when: not usershub_service.stat.exists
+  template:
+    src: "usershub.service.j2"
+    dest: "/etc/systemd/system/usershub.service"
+    mode: 0777
+    owner: root
+    group: root
+  register: usershub_unitfile
+
+- name: start/enable the usershub service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: usershub
+  when: usershub_unitfile.changed

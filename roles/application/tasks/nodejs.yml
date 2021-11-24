@@ -1,0 +1,14 @@
+# - name: Install JS app with NVM
+#   become: true
+#   become_user: "{{ prerequisite.user.name }}"
+#   shell: |
+#     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+#     [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+#     cd ~/usershub/app/static && nvm install
+#     cd ~/usershub/app/static && nvm use
+#     cd ~/usershub/app/static && nvm ci
+#   environment:
+#     NVM_DIR: /home/{{ prerequisite.user.name }}/.nvm
+
+- name: Install JS app with npm
+  shell: cd ~/usershub/app/static && npm install

@@ -1,3 +1,4 @@
+# INSTALL GENERAL DEPENDANCIES
 - name : "Install dependancies"
   become: yes
   become_user: root
@@ -7,6 +8,7 @@
     state: present
   when: ansible_distribution_release == "bullseye"
 
+# INSTALL PYTHON DEPENDANCIES
 - name : "Install python3 dependencies"
   become: yes
   become_user: root
@@ -16,30 +18,7 @@
     update_cache: yes
   when: ansible_distribution_release == "bullseye"
 
-- name: check if nodejs is already installed
-  package_facts:
-    manager: auto
-
-- name: get nodejs src
-  become: true
-  become_user: "{{ user.name }}"
-  shell: "cd /home/{{ user.name }} && curl -fsSL https://deb.nodesource.com/setup_{{ prerequisite.node.nodejs }}.x | bash -"
-  when: "'nodejs' not in ansible_facts.packages"
-
-- name : install nodejs
-  become: yes
-  become_user: root
-  apt:
-    pkg: nodejs
-    state: present
-    update_cache: yes
-  when: "'nodejs' not in ansible_facts.packages"
-
-- name: Install nvm
-  shell: >
-    curl https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | sh
-    creates=/home/synthese/.nvm/nvm.sh
-
+# INSTALL APACHE
 - name: install apache2
   become: yes
   become_user: root
@@ -47,22 +26,15 @@
     pkg: apache2
     state: present
 
+# INSTALL VENV
 - name: install virtualenv from pip
   become: yes
   become_user: root
   pip:
     name: virtualenv==20.0.1
 
-- name : check if git project exists
-  stat: 
-    path: "/home/ {{ prerequisite.user.name }} /usershub"
-  register: usershub_folder
-
-- name: clone git project
-  when: not usershub_folder.stat.exists
-  git:
-    repo: "{{ prerequisite.git.url }}"
-    dest: "~/usershub"
-    version: "{{ prerequisite.git.release }}"
-    recursive: yes
-    track_submodules: yes
+# USE OTHERS YML IN THE SAME FOLDER
+- include: "{{item}}.yml"
+  with_items:
+  - node
+  - git

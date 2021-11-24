@@ -1,0 +1,34 @@
+- name : check if apache config exists
+  stat: 
+    path: "/etc/apache2/conf-available/usershub.conf"
+  register: apache_config
+
+- name: Create apache config
+  become: true
+  become_user: root
+  when: not apache_config.stat.exists
+  template:
+    src: "usershub.service.j2"
+    dest: "/etc/systemd/system/usershub.service"
+    mode: 0777
+    owner: root
+    group: root
+
+- name: Enable Apache2 modules
+  become: true
+  become_user: root
+  apache2_module:
+    state: present
+    name: "{{ item }}"
+  with_items:
+    - proxy
+    - proxy_http
+  register: apache_modules
+
+- name: reload apache2 if needed
+  become: true
+  become_user: root
+  service:
+    name: apache2
+    state: reloaded
+  when: apache_modules is changed

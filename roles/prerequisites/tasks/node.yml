@@ -1,0 +1,27 @@
+- name: check if nodejs is already installed
+  package_facts:
+    manager: auto
+
+# DEBIAN NEEDS TO INSTALL NODEJS FROM BINARY
+- name: get nodejs src
+  become: true
+  become_user: root
+  shell: "cd /home/{{ prerequisite.user.name }} && curl -fsSL https://deb.nodesource.com/setup_{{ prerequisite.node.nodejs }}.x | bash -"
+  when: "'nodejs' not in ansible_facts.packages"
+
+# INSTALL NODEJS FROM NODE SOURCE LIST
+- name : install nodejs
+  become: yes
+  become_user: root
+  apt:
+    pkg: nodejs=10.24.1-deb-1nodesource1
+    state: present
+    update_cache: yes
+  when: "'nodejs' not in ansible_facts.packages"
+
+## INSTALL NVM - NODE VERSION MANAGER
+### UNCOMMENT IF MANY NODEJS IN THE SAME ENV
+# - name: Install nvm
+#   shell: >
+#     curl https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | sh
+#     creates=~/.nvm/nvm.sh

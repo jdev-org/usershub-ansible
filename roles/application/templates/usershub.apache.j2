@@ -1,0 +1,4 @@
+<Location /usershub>
+    ProxyPass http://127.0.0.1:{{ application.config.serverport }}/usershub
+    ProxyPassReverse http://127.0.0.1:{{ application.config.serverport }}/usershub
+<Location>
